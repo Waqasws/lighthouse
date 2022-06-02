@@ -97,8 +97,6 @@ export type ScreenEmulationSettings = {
   precomputedLanternData?: PrecomputedLanternData | null;
   /** The budget.json object for LightWallet. */
   budgets?: Array<Budget> | null;
-  /** Run benchmarkindex this many extra times */
-  __internalMegaBenchmarkIndex?: number;
 }
 
 export interface ConfigSettings extends Required<SharedFlagsSettings> {
