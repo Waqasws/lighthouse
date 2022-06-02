@@ -37,7 +37,7 @@ globalThis.Buffer = Buffer;
  * @param {Connection} connection
  * @param {string} url
  * @param {LH.Flags} flags Lighthouse flags
- * @param {{lrDevice?: 'desktop'|'mobile', categoryIDs?: Array<string>, logAssets: boolean, configOverride?: LH.Config.Json, megaBidx: boolean}} lrOpts Options coming from Lightrider
+ * @param {{lrDevice?: 'desktop'|'mobile', categoryIDs?: Array<string>, logAssets: boolean, configOverride?: LH.Config.Json, megaBidx: number}} lrOpts Options coming from Lightrider
  * @return {Promise<string>}
  */
 export async function runLighthouseInLR(connection, url, flags, lrOpts) {
@@ -61,9 +61,10 @@ export async function runLighthouseInLR(connection, url, flags, lrOpts) {
       config.settings.onlyCategories = categoryIDs;
     }
   }
+  // Set to 0 to disable
   if (megaBidx) {
     config.settings = config.settings || {};
-    config.settings.__internalMegaBenchmarkIndex = true;
+    config.settings.__internalMegaBenchmarkIndex = megaBidx;
   }
 
   try {
