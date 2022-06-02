@@ -65,6 +65,7 @@ async function legacyNavigation(url, flags = {}, configJSON, userConnection) {
   log.setLevel(flags.logLevel);
 
   const config = generateConfig(configJSON, flags);
+  config.settings.__internalMegaBenchmarkIndex = 10;
   const computedCache = new Map();
   const options = {config, computedCache};
   const connection = userConnection || new ChromeProtocol(flags.port, flags.hostname);

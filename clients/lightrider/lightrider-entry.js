@@ -37,11 +37,11 @@ globalThis.Buffer = Buffer;
  * @param {Connection} connection
  * @param {string} url
  * @param {LH.Flags} flags Lighthouse flags
- * @param {{lrDevice?: 'desktop'|'mobile', categoryIDs?: Array<string>, logAssets: boolean, configOverride?: LH.Config.Json}} lrOpts Options coming from Lightrider
+ * @param {{lrDevice?: 'desktop'|'mobile', categoryIDs?: Array<string>, logAssets: boolean, configOverride?: LH.Config.Json, megaBidx: boolean}} lrOpts Options coming from Lightrider
  * @return {Promise<string>}
  */
 export async function runLighthouseInLR(connection, url, flags, lrOpts) {
-  const {lrDevice, categoryIDs, logAssets, configOverride} = lrOpts;
+  const {lrDevice, categoryIDs, logAssets, configOverride, megaBidx} = lrOpts;
 
   // Certain fixes need to kick in under LR, see https://github.com/GoogleChrome/lighthouse/issues/5839
   global.isLightrider = true;
@@ -60,6 +60,10 @@ export async function runLighthouseInLR(connection, url, flags, lrOpts) {
       config.settings = config.settings || {};
       config.settings.onlyCategories = categoryIDs;
     }
+  }
+  if (megaBidx) {
+    config.settings = config.settings || {};
+    config.settings.__internalMegaBenchmarkIndex = true;
   }
 
   try {

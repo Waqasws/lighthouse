@@ -491,6 +491,17 @@ class GatherRunner {
       const baseArtifacts = await GatherRunner.initializeBaseArtifacts(options);
       baseArtifacts.BenchmarkIndex = await getBenchmarkIndex(driver.executionContext);
 
+      if (options.settings.__internalMegaBenchmarkIndex) {
+        const bidxRunCount = options.settings.__internalMegaBenchmarkIndex;
+        // Keep the first one in there
+        const bidxes = [baseArtifacts.BenchmarkIndex];
+        for (let i = 0; i < bidxRunCount; i++) {
+          const bidx = await getBenchmarkIndex(driver.executionContext);
+          bidxes.push(bidx);
+        }
+        baseArtifacts.BenchmarkIndexes = bidxes;
+      }
+
       await GatherRunner.setupDriver(driver, options);
 
       let isFirstPass = true;
