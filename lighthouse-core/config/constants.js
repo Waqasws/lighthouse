@@ -119,8 +119,6 @@ const defaultSettings = {
   onlyAudits: null,
   onlyCategories: null,
   skipAudits: null,
-
-  __internalMegaBenchmarkIndex: 0,
 };
 
 /** @type {LH.Config.Pass} */
