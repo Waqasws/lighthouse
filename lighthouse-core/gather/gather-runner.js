@@ -498,12 +498,12 @@ class GatherRunner {
       if (options.settings.channel === 'lr' && parsedUrl && parsedUrl.searchParams.has('bidx')) {
         const bidxRunCount = parsedUrl.searchParams.get('bidx') || 0;
         // Add the first bidx into the new set
-        const bidxes = [baseArtifacts.BenchmarkIndex];
+        const indexes = [baseArtifacts.BenchmarkIndex];
         for (let i = 0; i < bidxRunCount; i++) {
           const bidx = await getBenchmarkIndex(driver.executionContext);
-          bidxes.push(bidx);
+          indexes.push(bidx);
         }
-        baseArtifacts.BenchmarkIndexes = bidxes;
+        baseArtifacts.BenchmarkIndexes = indexes;
       }
 
       await GatherRunner.setupDriver(driver, options);
