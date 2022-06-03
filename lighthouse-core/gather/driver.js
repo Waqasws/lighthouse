@@ -12,7 +12,7 @@ const {fetchResponseBodyFromCache} = require('../gather/driver/network.js');
 const EventEmitter = require('events').EventEmitter;
 
 const log = require('lighthouse-logger');
-const MessageLog = require('./gatherers/devtools-log.js').MessageLog;
+const DevToolsMessageLog = require('./gatherers/devtools-log.js').DevToolsMessageLog;
 const TraceGatherer = require('./gatherers/trace.js');
 
 // Pulled in for Connection type checking.
@@ -41,7 +41,7 @@ class Driver {
    * @private
    * Used to save network and lifecycle protocol traffic. Just Page and Network are needed.
    */
-  _devtoolsLog = new MessageLog(/^(Page|Network)\./);
+  _devtoolsLog = new DevToolsMessageLog(/^(Page|Network)\./);
 
   /**
    * @private

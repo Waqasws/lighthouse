@@ -25,11 +25,11 @@ class DevtoolsLog extends FRGatherer {
 
   constructor() {
     super();
-
+    console.log('hi fr dt');
     /** @type {NetworkMonitor|undefined} */
     this._networkMonitor = undefined;
 
-    this._messageLog = new MessageLog(/^(Page|Network)\./);
+    this._messageLog = new DevToolsMessageLog(/^(Page|Network)\./);
 
     /** @param {LH.Protocol.RawEventMessage} e */
     this._onProtocolMessage = e => this._messageLog.record(e);
@@ -68,7 +68,7 @@ class DevtoolsLog extends FRGatherer {
  *    regex filter. Used when saving assets for later analysis by another tool such as
  *    Webpagetest.
  */
-class MessageLog {
+class DevToolsMessageLog {
   /**
    * @param {RegExp=} regexFilter
    */
@@ -117,4 +117,4 @@ class MessageLog {
 }
 
 module.exports = DevtoolsLog;
-module.exports.MessageLog = MessageLog;
+module.exports.DevToolsMessageLog = DevToolsMessageLog;
