@@ -37,7 +37,6 @@ class NetworkMonitor {
     this._session = session;
 
     this._onTargetAttached = this._onTargetAttached.bind(this);
-    this._onTargetAttachedLegacy = this._onTargetAttachedLegacy.bind(this);
 
     /** @type {Map<string, LH.Gatherer.FRProtocolSession>} */
     this._sessions = new Map();
@@ -83,23 +82,6 @@ class NetworkMonitor {
   }
 
   /**
-   * @param {LH.Crdp.Target.AttachedToTargetEvent} event
-   */
-  async _onTargetAttachedLegacy(event) {
-    const session = this._session;
-    const targetId = event.targetInfo.targetId;
-
-    this._sessions.set(targetId, session);
-    this._session.addProtocolMessageListener(payload => {
-      if (payload.sessionId !== event.sessionId) return;
-
-      this._onProtocolMessage(payload);
-    });
-
-    await session.sendCommand('Network.enable');
-  }
-
-  /**
    * @return {Promise<void>}
    */
   async enable() {
@@ -133,7 +115,7 @@ class NetworkMonitor {
       this._targetManager.addTargetAttachedListener(this._onTargetAttached);
       await this._targetManager.enable();
     } else {
-      this._session.on('Target.attachedToTarget', this._onTargetAttachedLegacy);
+      this._session.addProtocolMessageListener(this._onProtocolMessage);
     }
   }
 
@@ -150,12 +132,12 @@ class NetworkMonitor {
     const isLegacyRunner = Boolean(this._session._domainEnabledCounts);
     if (!isLegacyRunner) {
       this._targetManager.removeTargetAttachedListener(this._onTargetAttached);
-    } else {
-      this._session.off('Target.attachedToTarget', this._onTargetAttachedLegacy);
-    }
 
-    for (const session of this._sessions.values()) {
-      session.removeProtocolMessageListener(this._onProtocolMessage);
+      for (const session of this._sessions.values()) {
+        session.removeProtocolMessageListener(this._onProtocolMessage);
+      }
+    } else {
+      this._session.removeProtocolMessageListener(this._onProtocolMessage);
     }
 
     if (!isLegacyRunner) await this._targetManager.disable();
