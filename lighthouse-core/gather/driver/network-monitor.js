@@ -106,10 +106,15 @@ class NetworkMonitor {
     this._networkRecorder.on('requestloaded', reEmit('requestloaded'));
 
     this._session.on('Page.frameNavigated', this._onFrameNavigated);
-    this._targetManager.addTargetAttachedListener(this._onTargetAttached);
-
     await this._session.sendCommand('Page.enable');
-    await this._targetManager.enable();
+
+    // Legacy driver does its own target management.
+    // @ts-expect-error
+    const isLegacyRunner = Boolean(this._session._domainEnabledCounts);
+    if (!isLegacyRunner) {
+      this._targetManager.addTargetAttachedListener(this._onTargetAttached);
+      await this._targetManager.enable();
+    }
   }
 
   /**
