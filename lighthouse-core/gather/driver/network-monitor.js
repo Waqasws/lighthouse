@@ -111,11 +111,11 @@ class NetworkMonitor {
     // Legacy driver does its own target management.
     // @ts-expect-error
     const isLegacyRunner = Boolean(this._session._domainEnabledCounts);
-    if (!isLegacyRunner) {
+    if (isLegacyRunner) {
+      this._session.addProtocolMessageListener(this._onProtocolMessage);
+    } else {
       this._targetManager.addTargetAttachedListener(this._onTargetAttached);
       await this._targetManager.enable();
-    } else {
-      this._session.addProtocolMessageListener(this._onProtocolMessage);
     }
   }
 
@@ -130,14 +130,14 @@ class NetworkMonitor {
     // Legacy driver does its own target management.
     // @ts-expect-error
     const isLegacyRunner = Boolean(this._session._domainEnabledCounts);
-    if (!isLegacyRunner) {
+    if (isLegacyRunner) {
+      this._session.removeProtocolMessageListener(this._onProtocolMessage);
+    } else {
       this._targetManager.removeTargetAttachedListener(this._onTargetAttached);
 
       for (const session of this._sessions.values()) {
         session.removeProtocolMessageListener(this._onProtocolMessage);
       }
-    } else {
-      this._session.removeProtocolMessageListener(this._onProtocolMessage);
     }
 
     if (!isLegacyRunner) await this._targetManager.disable();
