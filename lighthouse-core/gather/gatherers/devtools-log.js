@@ -25,7 +25,7 @@ class DevtoolsLog extends FRGatherer {
 
   constructor() {
     super();
-    console.log('hi fr dt');
+
     /** @type {NetworkMonitor|undefined} */
     this._networkMonitor = undefined;
 
